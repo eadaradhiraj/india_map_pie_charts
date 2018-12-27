@@ -16,7 +16,9 @@ var svg = d3.select("#map").append("svg")
     .attr("height", height)
 
 d3.json('https://raw.githubusercontent.com/eadaradhiraj/india_map_pie_charts/master/india_states_geojson.json', function (_, world) {
-    render(data, world)
+    d3.json('https://raw.githubusercontent.com/eadaradhiraj/india_map_pie_charts/master/data.json', function (_, data) {
+      render(data, world)
+    })
 })
 
 function render(data, world) {
