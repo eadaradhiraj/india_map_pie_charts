@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)http://dc-js.github.io/dc.js/examples/stacked-bar.html -->
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+
+<body>
+
+
+    <div id="map"></div>
+    <div id="pie-chart"></div>
+
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+        var metorScale = d3.scale.pow().domain([0, 300]);
+        var colorScale = d3.scale.linear().domain([1400, 1800, 1860, 1940, 2015]);
+        var color = d3.scale.category20c();
+
+        var width = 1000,
+            height = 500;
+
+        var proj = d3.geo.mercator()
+            .center([15, 42])
+            .scale(2000)
+
+        var path = d3.geo.path()
+            .projection(proj);
+
+        var svg = d3.select("#map").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+
+        var data = [{
+            "key": "Lombardia",
+            "interactions": 12600,
+            "unique_authors": 9900,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 12300,
+                "unique_authors": 9500
+            }, {
+                "key": "Transportation",
+                "interactions": 3300,
+                "unique_authors": 2900
+            }, {
+                "key": "Interest",
+                "interactions": 3100,
+                "unique_authors": 2700
+            }, {
+                "key": "Company",
+                "interactions": 1700,
+                "unique_authors": 1400
+            }, {
+                "key": "City",
+                "interactions": 1300,
+                "unique_authors": 1200
+            }]
+        }, {
+            "key": "Lazio",
+            "interactions": 8400,
+            "unique_authors": 6700,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 8300,
+                "unique_authors": 6500
+            }, {
+                "key": "Transportation",
+                "interactions": 2100,
+                "unique_authors": 1800
+            }, {
+                "key": "Interest",
+                "interactions": 1800,
+                "unique_authors": 1500
+            }, {
+                "key": "Company",
+                "interactions": 1200,
+                "unique_authors": 1100
+            }, {
+                "key": "City",
+                "interactions": 800,
+                "unique_authors": 700
+            }]
+        }, {
+            "key": "Campania",
+            "interactions": 7300,
+            "unique_authors": 5800,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 7200,
+                "unique_authors": 5700
+            }, {
+                "key": "Transportation",
+                "interactions": 2000,
+                "unique_authors": 1800
+            }, {
+                "key": "Interest",
+                "interactions": 1800,
+                "unique_authors": 1600
+            }, {
+                "key": "Company",
+                "interactions": 900,
+                "unique_authors": 800
+            }, {
+                "key": "City",
+                "interactions": 600,
+                "unique_authors": 600
+            }]
+        }, {
+            "key": "Sicilia",
+            "interactions": 6600,
+            "unique_authors": 4900,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 6500,
+                "unique_authors": 4700
+            }, {
+                "key": "Transportation",
+                "interactions": 1900,
+                "unique_authors": 1600
+            }, {
+                "key": "Interest",
+                "interactions": 1700,
+                "unique_authors": 1400
+            }, {
+                "key": "Company",
+                "interactions": 900,
+                "unique_authors": 800
+            }, {
+                "key": "City",
+                "interactions": 500,
+                "unique_authors": 500
+            }]
+        }, {
+            "key": "Veneto",
+            "interactions": 5500,
+            "unique_authors": 4200,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 5300,
+                "unique_authors": 4100
+            }, {
+                "key": "Transportation",
+                "interactions": 1500,
+                "unique_authors": 1300
+            }, {
+                "key": "Interest",
+                "interactions": 1300,
+                "unique_authors": 1200
+            }, {
+                "key": "Company",
+                "interactions": 700,
+                "unique_authors": 600
+            }, {
+                "key": "City",
+                "interactions": 400,
+                "unique_authors": 300
+            }]
+        }, {
+            "key": "Puglia",
+            "interactions": 5200,
+            "unique_authors": 4000,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 5100,
+                "unique_authors": 3900
+            }, {
+                "key": "Transportation",
+                "interactions": 1400,
+                "unique_authors": 1200
+            }, {
+                "key": "Interest",
+                "interactions": 1300,
+                "unique_authors": 1100
+            }, {
+                "key": "Company",
+                "interactions": 700,
+                "unique_authors": 600
+            }, {
+                "key": "City",
+                "interactions": 400,
+                "unique_authors": 400
+            }]
+        }, {
+            "key": "Piemonte",
+            "interactions": 4900,
+            "unique_authors": 3800,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 4800,
+                "unique_authors": 3700
+            }, {
+                "key": "Transportation",
+                "interactions": 1300,
+                "unique_authors": 1100
+            }, {
+                "key": "Interest",
+                "interactions": 1200,
+                "unique_authors": 1000
+            }, {
+                "key": "Company",
+                "interactions": 600,
+                "unique_authors": 600
+            }, {
+                "key": "City",
+                "interactions": 600,
+                "unique_authors": 500
+            }]
+        }, {
+            "key": "Emilia-Romagna",
+            "interactions": 4900,
+            "unique_authors": 3700,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 4700,
+                "unique_authors": 3500
+            }, {
+                "key": "Transportation",
+                "interactions": 1200,
+                "unique_authors": 1000
+            }, {
+                "key": "Interest",
+                "interactions": 1200,
+                "unique_authors": 1000
+            }, {
+                "key": "Company",
+                "interactions": 600,
+                "unique_authors": 500
+            }, {
+                "key": "City",
+                "interactions": 400,
+                "unique_authors": 400
+            }]
+        }, {
+            "key": "Toscana",
+            "interactions": 3500,
+            "unique_authors": 2800,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 3400,
+                "unique_authors": 2700
+            }, {
+                "key": "Transportation",
+                "interactions": 1000,
+                "unique_authors": 800
+            }, {
+                "key": "Interest",
+                "interactions": 900,
+                "unique_authors": 700
+            }, {
+                "key": "Company",
+                "interactions": 500,
+                "unique_authors": 500
+            }, {
+                "key": "City",
+                "interactions": 300,
+                "unique_authors": 200
+            }]
+        }, {
+            "key": "Sardegna",
+            "interactions": 2300,
+            "unique_authors": 1900,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 2300,
+                "unique_authors": 1800
+            }, {
+                "key": "Transportation",
+                "interactions": 500,
+                "unique_authors": 500
+            }, {
+                "key": "Interest",
+                "interactions": 500,
+                "unique_authors": 400
+            }, {
+                "key": "Company",
+                "interactions": 300,
+                "unique_authors": 200
+            }, {
+                "key": "City",
+                "interactions": 200,
+                "unique_authors": 100
+            }]
+        }, {
+            "key": "Calabria",
+            "interactions": 2300,
+            "unique_authors": 1800,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 2200,
+                "unique_authors": 1700
+            }, {
+                "key": "Transportation",
+                "interactions": 700,
+                "unique_authors": 600
+            }, {
+                "key": "Interest",
+                "interactions": 500,
+                "unique_authors": 500
+            }, {
+                "key": "Company",
+                "interactions": 300,
+                "unique_authors": 300
+            }, {
+                "key": "City",
+                "interactions": 200,
+                "unique_authors": 200
+            }]
+        }, {
+            "key": "Liguria",
+            "interactions": 1600,
+            "unique_authors": 1200,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 1500,
+                "unique_authors": 1100
+            }, {
+                "key": "Transportation",
+                "interactions": 400,
+                "unique_authors": 300
+            }, {
+                "key": "Interest",
+                "interactions": 300,
+                "unique_authors": 200
+            }, {
+                "key": "Company",
+                "interactions": 200,
+                "unique_authors": 100
+            }, {
+                "key": "City",
+                "interactions": 100,
+                "unique_authors": 100
+            }]
+        }, {
+            "key": "Marche",
+            "interactions": 1500,
+            "unique_authors": 1100,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 1500,
+                "unique_authors": 1100
+            }, {
+                "key": "Interest",
+                "interactions": 400,
+                "unique_authors": 400
+            }, {
+                "key": "Transportation",
+                "interactions": 400,
+                "unique_authors": 400
+            }, {
+                "key": "City",
+                "interactions": 200,
+                "unique_authors": 100
+            }, {
+                "key": "Company",
+                "interactions": 100,
+                "unique_authors": 100
+            }]
+        }, {
+            "key": "Abruzzo",
+            "interactions": 1500,
+            "unique_authors": 1100,
+            "topics": [{
+                "key": "Cars",
+                "interactions": 1400,
+                "unique_authors": 1100
+            }, {
+                "key": "Transportation",
+                "interactions": 400,
+                "unique_authors": 300
+            }, {
+                "key": "Interest",
+                "interactions": 400,
+                "unique_authors": 300
+            }, {
+                "key": "Company",
+                "interactions": 200,
+                "unique_authors": 200
+            }, {
+                "key": "City",
+                "interactions": 100,
+                "unique_authors": 100
+            }]
+        }, {
+            "key": "Trentino-Alto Adige",
+            "interactions": 1200,
+            "unique_authors": 900,
+            "topics": []
+        }, {
+            "key": "Friuli-Venezia Giulia",
+            "interactions": 1200,
+            "unique_authors": 900,
+            "topics": []
+        }, {
+            "key": "Umbria",
+            "interactions": 800,
+            "unique_authors": 600,
+            "topics": []
+        }, {
+            "key": "Basilicata",
+            "interactions": 600,
+            "unique_authors": 400,
+            "topics": []
+        }, {
+            "key": "Molise",
+            "interactions": 300,
+            "unique_authors": 200,
+            "topics": []
+        }]
+
+        d3.json(
+            'https://gist.githubusercontent.com/lmatteis/5da1af2490e38e01f44d48f2b9af81e7/raw/5243148ae0590bf0ceee837b3ec73ca0cba36f1c/italy-regions.json',
+            function (error, world) {
+                render(error, data, world)
+            })
+
+        function render(error, data, world) {
+            // console.log(JSON.stringify(data, null, 2))
+
+            // draw map
+            svg.selectAll("path")
+                .data(world.features)
+                .enter().append("path")
+                .attr("d", path)
+                .attr("class", "border")
+
+            var pie = svg.selectAll('.pie')
+                .data(data);
+
+            pie.enter().append('g')
+                .attr('class', '.pie')
+                .attr("fill", "red")
+                .attr("transform", function (d) {
+                    var arr = world.features.filter(function (o) {
+                        return (o.properties.name.toLowerCase() == d.key.toLowerCase())
+                    })
+                    if (!arr.length) return;
+                    var p = proj(d3.geo.centroid(arr[0]));
+                    return "translate(" + p + ")";
+                });
+
+            var pieData = d3.layout.pie()
+                .value(function (d) {
+                    return d.interactions;
+                });
+
+            var g = pie.selectAll('g')
+                .data(function (d) {
+                    var pieSize = metorScale(d.interactions)
+                    if (d.topics)
+                        d.topics.map(function (t) {
+                            t.pieSize = pieSize;
+                            return t;
+                        })
+                    console.log(d.topics ? pieData(d.topics) : [])
+                    return d.topics ? pieData(d.topics) : []
+                })
+
+            g.enter().append('g') // create g elements inside each pie
+                .attr('class', 'arc')
+
+            var arc = d3.svg.arc()
+                .outerRadius(function (d) {
+                    return d.data.pieSize
+                })
+                .innerRadius(0);
+
+            g.append('path')
+                .attr("fill", function (d, i) {
+                    return color(i);
+                })
+                .attr('d', arc)
+
+        }
+    </script>
+
+
+</body>
+
+</html>
